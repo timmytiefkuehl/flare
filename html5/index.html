@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>html5 - flare</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "html5";
+    var mkdocs_page_input_path = "html5.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> flare</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">html5</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#first-steps">First steps</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#the-build-in-html5-parser">The build-in HTML5 parser</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#inheritance-is-normal">Inheritance is normal</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">flare</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>html5</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="html5">html5</h1>
+<p><strong>flare</strong> is entirely established on top of a library called <em>html5</em>.</p>
+<p>This library manages access to the browser's DOM and its items, by implementing a Python object wrapper class for every HTML5-element. This is called a <em>widget</em>. For example <code>html5.Div()</code> is the widget representing a div-element, or <code>html5.A()</code> a widget representing an a-element.</p>
+<p>The document's body and head can directly be accessed by the static widgets <code>html5.Head()</code> and <code>html5.Body()</code>.
+All these widgets are inheriting from an abstract widget wrapper class called <code>html5.Widget</code>. <code>html5.Widget</code> is the overall superclass which contains most of the functions used when working with DOM elements. Therefore, all widgets are usually handled the same way.</p>
+<h2 id="first-steps">First steps</h2>
+<p>When working with native HTML5 widgets, every widget must be created separately and stacked together in the desired order. This practise is well known from JavaScript's createElement-function.</p>
+<p>Here's a little code sample.</p>
+<pre><code class="python">from flare import *
+
+# Creating a new a-widget
+a = html5.A()
+a[&quot;href&quot;] = &quot;https://www.viur.dev&quot;  # assign value to href-attribute
+a[&quot;target&quot;] = &quot;_blank&quot;              # assign value to target-attribute
+a.addClass(&quot;link&quot;)                  # Add style class &quot;link&quot; to element
+
+# Append text node &quot;Hello World&quot; to the a-element
+a.appendChild(html5.TextNode(&quot;Hello World&quot;))
+
+# Append the a-widget to the body-widget
+html5.Body().appendChild(a)
+</code></pre>
+
+<p>Summarized:</p>
+<ul>
+<li><code>html5.Xyz()</code> creates an instance of the desired widget (the notation is that the first letter is always uppercase, rest is hold lowercase, therefore <code>html5.Textarea()</code> for a textarea is used)</li>
+<li>Attributes are accessable via attribute indexing, like <code>widget["attribute"]</code>. There are some special attributes like <code>style</code> or <code>data</code> that are providing a dict-like access, so <code>widget["style"]["border"] = "1px solid red"</code> is used.</li>
+<li>Stacking is performed with <code>widget.appendChild()</code>. There's also <code>widget.prependChild()</code>, <code>widget.insertChild()</code> and <code>widget.removeChild()</code> for further insertion or removal operations.</li>
+</ul>
+<h2 id="the-build-in-html5-parser">The build-in HTML5 parser</h2>
+<p>Above result can also be achieved much faster, when the build-in HTML5 parser is used. </p>
+<pre><code class="python">from flare import *
+
+html5.Body().appendChild(
+    &quot;&lt;a href='https://www.viur.dev' target='_blank' class='viur'&gt;Hello World&lt;/a&gt;&quot;
+)
+</code></pre>
+
+<p>Much simpler, right? This is a very handy feature for prototyping and to quickly integrate new HTML layouts.
+<code>Widget.appendChild()</code> and other, corresponding functions, allow for an arbitrary number of elements to be added. HTML-code, more widgets, text or even lists or tuples can be given to these functions, like so</p>
+<pre><code class="python">ul = html5.Ul()
+ul.appendChild(&quot;&lt;li&gt;lol&lt;/li&gt;&quot;)
+ul.prependChild(html5.Li(1337 * 42))
+ul.appendChild(&quot;&lt;li&gt;me too&lt;/li&gt;&quot;, html5.Li(&quot;and same as I&quot;))
+</code></pre>
+
+<h2 id="inheritance-is-normal">Inheritance is normal</h2>
+<p>In most cases, both methods shown above are used together where necessary and useful. Especially when creating new Widgets with a custom behavior inside your app, knowledge of both worlds is required.</p>
+<p>To create new components, inheriting from existing widgets is usual. If we would like to add our link multiple times within our app, with additional click tracking, we can make it a separate widget, like so:</p>
+<pre><code class="python">import logging
+from flare import *
+
+class Link(html5.A):
+    def __init__(self, url, *args, target=&quot;_blank&quot;, **kwargs):
+        super().__init__()
+        self.addClass(&quot;link&quot;)
+        self[&quot;href&quot;] = url
+        self[&quot;target&quot;] = &quot;_blank&quot;
+
+        self.appendChild(*args, **kwargs)
+        self.sinkEvent(&quot;onClick&quot;)
+
+    def onClick(self, event):
+        logging.info(f&quot;The link to {self['href']} has been clicked&quot;)
+
+html5.Body().appendChild(
+    # Create a link with text
+    Link(&quot;https://www.viur.dev&quot;, &quot;ViUR Framework&quot;),
+
+    &quot;&lt;br&gt;&quot;,
+
+    # Create link with logo
+    Link(&quot;https://www.python.org&quot;, &quot;&quot;&quot;
+        &lt;img src=&quot;https://www.python.org/static/community_logos/python-powered-h-50x65.png&quot;
+            title=&quot;Python Programming Language&quot;&gt;
+    &quot;&quot;&quot;)
+)
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
