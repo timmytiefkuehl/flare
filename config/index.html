@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Configuration - flare</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Configuration";
+    var mkdocs_page_input_path = "config.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> flare</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../setup/">Setup</a>
+                    </li>
+                </ul>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">Configuration</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#configpy">config.py</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#serving-own-pyodide">Serving own Pyodide</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#google-app-engine">Google App Engine</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#apache-webserver">Apache Webserver</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../html5/">html5</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">flare</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Configuration</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="configuration">Configuration</h1>
+<h2 id="configpy">config.py</h2>
+<p>Coming soon.</p>
+<h2 id="serving-own-pyodide">Serving own Pyodide</h2>
+<p>The script <code>bin/get-pyodide.py</code> downloads a minimal Pyodide with only <code>micropip</code> and <code>setuptools</code> from the Pyodide CDN. Pyodide can also be entirely built and configured on your own, for this check <a href="https://pyodide.readthedocs.io/en/latest/building_from_sources.html">the documentation</a>.</p>
+<p>Depending on the location where you want to serve your app, some more configuration might be necessary regarding the WASM mimetype.</p>
+<h3 id="google-app-engine">Google App Engine</h3>
+<p>To serve your own Pyodide via Google App Engine, add the following lines to your <code>app.yaml</code> file and modify them when needed, as Google App Engine doesn't recognize WASM files correctly.</p>
+<pre><code class="yaml">handlers:
+- url: /pyodide/(.*\.wasm)$
+  static_files: pyodide/\1
+  upload: pyodide/.*\.wasm$
+  mime_type: application/wasm
+- url: /pyodide
+  static_dir: pyodide
+</code></pre>
+
+<h3 id="apache-webserver">Apache Webserver</h3>
+<p>For apache web-server, this <code>.htaccess</code> configuration helped to serve the app correctly.</p>
+<pre><code>RewriteEngine off
+Options -ExecCGI +Indexes 
+IndexOrderDefault Descending Date
+
+#Header always set Access-Control-Allow-Origin &quot;*&quot;
+#Header always set Access-Control-Allow-Methods GET
+
+&lt;FilesMatch &quot;\.py$&quot;&gt;
+    Options +Indexes -ExecCGI -Multiviews
+    Order allow,deny
+    Allow from all
+    RemoveHandler .py
+    AddType text/plain .py
+&lt;/FilesMatch&gt;
+
+&lt;FilesMatch &quot;\.data$&quot;&gt;
+    Options +Indexes -ExecCGI -Multiviews
+    Order allow,deny
+    Allow from all
+    RemoveHandler .data
+    AddType application/octet-stream .data
+&lt;/FilesMatch&gt;
+
+&lt;FilesMatch &quot;\.wasm$&quot;&gt;
+    Options +Indexes -ExecCGI -Multiviews
+    Order allow,deny
+    Allow from all
+    RemoveHandler .wasm
+    AddType application/wasm .wasm
+&lt;/FilesMatch&gt;
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../html5/" class="btn btn-neutral float-right" title="html5">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../setup/" class="btn btn-neutral" title="Setup"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../setup/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../html5/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
