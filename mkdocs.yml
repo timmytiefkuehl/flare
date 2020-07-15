@@ -1,5 +1,10 @@
 site_name: flare
-theme: readthedocs
+theme:
+#  name: mkdocs
+#  name: readthedocs
+  name: null
+  custom_dir: 'viur_theme/'
+
 
 nav:
   - Home: index.md
