@@ -64,9 +64,37 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#first-steps">First steps</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#the-build-in-html5-parser">The build-in HTML5 parser</a>
+    <li class="toctree-l2"><a class="reference internal" href="#parsing-widgets-from-html-code">Parsing widgets from HTML-code</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#inheritance-is-normal">Inheritance is normal</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#widget-fundamentals">Widget fundamentals</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#constructor">Constructor</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#appendchild-prependchild-insertchild-fromhtml">appendChild(), prependChild(), insertChild(), fromHTML()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#addclass-removeclass-toggleclass">addClass(), removeClass(), toggleClass()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#enable-disable">enable(), disable()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#hide-show">hide(), show()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#event-handling">Event handling</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#html-parser-reference">HTML parser reference</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#widget-configuration">Widget configuration</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#html5parsehtml">html5.parseHTML()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#html5fromhtml">html5.fromHTML()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#html5tag">@html5.tag</a>
+    </li>
+        </ul>
     </li>
     </ul>
                     </li>
@@ -132,7 +160,7 @@ html5.Body().appendChild(a)
 <li>Attributes are accessable via attribute indexing, like <code>widget["attribute"]</code>. There are some special attributes like <code>style</code> or <code>data</code> that are providing a dict-like access, so <code>widget["style"]["border"] = "1px solid red"</code> is used.</li>
 <li>Stacking is performed with <code>widget.appendChild()</code>. There's also <code>widget.prependChild()</code>, <code>widget.insertChild()</code> and <code>widget.removeChild()</code> for further insertion or removal operations.</li>
 </ul>
-<h2 id="the-build-in-html5-parser">The build-in HTML5 parser</h2>
+<h2 id="parsing-widgets-from-html-code">Parsing widgets from HTML-code</h2>
 <p>Above result can also be achieved much faster, when the build-in HTML5 parser is used. </p>
 <pre><code class="python">from flare import *
 
@@ -183,6 +211,39 @@ html5.Body().appendChild(
 </code></pre>
 
 <p>In this example, we just made our first custom component: The <code>Link</code>-class can be arbitrarily used.</p>
+<h2 id="widget-fundamentals">Widget fundamentals</h2>
+<p>Following sections describe the most widely used functions of the <code>html5.Widget</code>-class which are inherited by any widget or huger component in flare.</p>
+<h3 id="constructor">Constructor</h3>
+<p>All Widgets in html5 share the same <code>__init__</code>-function, having the following signature:</p>
+<pre><code class="python">def Widget.__init__(self, *args, appendTo=None, style=None, **kwargs)
+</code></pre>
+
+<ul>
+<li><code>*args</code> are any positional arguments that are passed to <code>self.appendChild()</code>. These can be either other widgets or strings containing HTML-code. Non-container widgets like <code>html5.Br()</code> or <code>html5.Hr()</code> don't allow anything passed to this parameter, and throw an Exception.</li>
+<li><code>appendTo</code> can be set to another html5.Widget where the constructed widget automatically will be appended to. It substitutes an additional <code>appendChild()</code>-call to insert the constructed Widget to the parent.</li>
+<li><code>style</code> allows to specify CSS-classes which are added to the constructed widget using</li>
+<li><code>**kwargs</code> specifies any other parameters that are passed to <code>appendChild()</code>, like variables.  </li>
+</ul>
+<h3 id="appendchild-prependchild-insertchild-fromhtml">appendChild(), prependChild(), insertChild(), fromHTML()</h3>
+<p>todo</p>
+<h3 id="addclass-removeclass-toggleclass">addClass(), removeClass(), toggleClass()</h3>
+<p>todo</p>
+<h3 id="enable-disable">enable(), disable()</h3>
+<p>todo</p>
+<h3 id="hide-show">hide(), show()</h3>
+<p>todo</p>
+<h3 id="event-handling">Event handling</h3>
+<p>todo</p>
+<h2 id="html-parser-reference">HTML parser reference</h2>
+<p>todo</p>
+<h3 id="widget-configuration">Widget configuration</h3>
+<p>todo</p>
+<h3 id="html5parsehtml">html5.parseHTML()</h3>
+<p>todo</p>
+<h3 id="html5fromhtml">html5.fromHTML()</h3>
+<p>todo</p>
+<h3 id="html5tag">@html5.tag</h3>
+<p>todo</p>
               
             </div>
           </div>
