@@ -72,9 +72,33 @@
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#constructor">Constructor</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#appendchild-prependchild-insertchild-fromhtml">appendChild(), prependChild(), insertChild(), fromHTML()</a>
+    <li class="toctree-l3"><a class="reference internal" href="#appendchild-prependchild-insertbefore-fromhtml-removechild">appendChild(), prependChild(), insertBefore(), fromHTML(), removeChild()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#appendchild">appendChild()</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#addclass-removeclass-toggleclass">addClass(), removeClass(), toggleClass()</a>
+    <li class="toctree-l4"><a class="reference internal" href="#prependchild">prependChild()</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#insertbefore">insertBefore()</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#fromhtml">fromHTML()</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#removechild">removeChild()</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#removeallchildren">removeAllChildren()</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#addclass-removeclass-toggleclass-hasclass">addClass(), removeClass(), toggleClass(), hasClass()</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#addclass">addClass()</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#removeclass">removeClass()</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#toggleclass">toggleClass()</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#hasclass">hasClass()</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#enable-disable">enable(), disable()</a>
     </li>
@@ -158,7 +182,7 @@ html5.Body().appendChild(a)
 <ul>
 <li><code>html5.Xyz()</code> creates an instance of the desired widget (the notation is that the first letter is always uppercase, rest is hold lowercase, therefore <code>html5.Textarea()</code> for a textarea is used)</li>
 <li>Attributes are accessable via attribute indexing, like <code>widget["attribute"]</code>. There are some special attributes like <code>style</code> or <code>data</code> that are providing a dict-like access, so <code>widget["style"]["border"] = "1px solid red"</code> is used.</li>
-<li>Stacking is performed with <code>widget.appendChild()</code>. There's also <code>widget.prependChild()</code>, <code>widget.insertChild()</code> and <code>widget.removeChild()</code> for further insertion or removal operations.</li>
+<li>Stacking is performed with <code>widget.appendChild()</code>. There's also <code>widget.prependChild()</code>, <code>widget.insertBefore()</code> and <code>widget.removeChild()</code> for further insertion or removal operations.</li>
 </ul>
 <h2 id="parsing-widgets-from-html-code">Parsing widgets from HTML-code</h2>
 <p>Above result can also be achieved much faster, when the build-in HTML5 parser is used. </p>
@@ -224,14 +248,68 @@ html5.Body().appendChild(
 <li><code>style</code> allows to specify CSS-classes which are added to the constructed widget using</li>
 <li><code>**kwargs</code> specifies any other parameters that are passed to <code>appendChild()</code>, like variables.  </li>
 </ul>
-<h3 id="appendchild-prependchild-insertchild-fromhtml">appendChild(), prependChild(), insertChild(), fromHTML()</h3>
-<p>todo</p>
-<h3 id="addclass-removeclass-toggleclass">addClass(), removeClass(), toggleClass()</h3>
-<p>todo</p>
+<h3 id="appendchild-prependchild-insertbefore-fromhtml-removechild">appendChild(), prependChild(), insertBefore(), fromHTML(), removeChild()</h3>
+<p>These methods manipulate the DOM and it's html elements</p>
+<h4 id="appendchild">appendChild()</h4>
+<p>Appends a new child to the parent element:</p>
+<pre><code>self.appendChild(&quot;&quot;&quot;&lt;ul class='navlist'&gt;&lt;/ul&gt;&quot;&quot;&quot;)
+self.nav.appendChild(&quot;&quot;&quot;&lt;li&gt;Navigation Point 1&lt;/li&gt;&quot;&quot;&quot;)
+</code></pre>
+
+<p>If replace=True is passed as an argument next to the html code, this method will discard all children of the parent element
+and replace them.</p>
+<h4 id="prependchild">prependChild()</h4>
+<p>Prepends a new child to the parent element</p>
+<pre><code>self.appendChild(&quot;&quot;&quot;&lt;ul class='navlist'&gt;&lt;/ul&gt;&quot;&quot;&quot;)
+navpoint2 = self.nav.appendChild(&quot;&quot;&quot;&lt;li&gt;Navigation Point 2&lt;/li&gt;&quot;&quot;&quot;)
+navpoint2.prependChild((&quot;&quot;&quot;&lt;li&gt;Navigation Point 1&lt;/li&gt;&quot;&quot;&quot;))
+</code></pre>
+
+<p>If replace=True is passed as an argument next to the html code, this method will discard all children of the parent element
+and replace them.</p>
+<h4 id="insertbefore">insertBefore()</h4>
+<p>Inserts a new child element before the target child element</p>
+<pre><code>self.appendChild(&quot;&quot;&quot;&lt;ul class='navlist'&gt;&lt;/ul&gt;&quot;&quot;&quot;)
+navpoint = self.nav.appendChild(&quot;&quot;&quot;&lt;li&gt;Navigation Point 1&lt;/li&gt;&quot;&quot;&quot;)
+navpoint3 = self.nav.appendChild((&quot;&quot;&quot;&lt;li&gt;Navigation Point 3&lt;/li&gt;&quot;&quot;&quot;))
+navpoint2 = self.nav.insertBefore((&quot;&quot;&quot;&lt;li&gt;Navigation Point 2&lt;/li&gt;&quot;&quot;&quot;), navpoint3)
+</code></pre>
+
+<p>If the child element that the new element is supposed to be inserted before does not exist, the new element is appended to the parent instead.</p>
+<h4 id="fromhtml">fromHTML()</h4>
+<p>Instantiates a widget from an html string that we can access in our python code.</p>
+<h4 id="removechild">removeChild()</h4>
+<p>Removes the child from the parent element</p>
+<h4 id="removeallchildren">removeAllChildren()</h4>
+<p>Removes all child elements from the parent element</p>
+<h3 id="addclass-removeclass-toggleclass-hasclass">addClass(), removeClass(), toggleClass(), hasClass()</h3>
+<p>These methods are helpful for adding classes dynamically.</p>
+<h4 id="addclass">addClass()</h4>
+<p>Adds a class to the html5 element and checks to prevent adding the same class.</p>
+<pre><code>nav = self.appendChild(&quot;&quot;&quot;&lt;ul&gt;&lt;/ul&gt;&quot;&quot;&quot;)
+nav.addClass('navlist')
+</code></pre>
+
+<h4 id="removeclass">removeClass()</h4>
+<p>Checks if the object has that class and removes it</p>
+<pre><code>nav = self.appendChild(&quot;&quot;&quot;&lt;ul class='big-red-warning-border-color'&gt;&lt;/ul&gt;&quot;&quot;&quot;)
+nav.removeClass('big-red-warning-border-color')
+</code></pre>
+
+<h4 id="toggleclass">toggleClass()</h4>
+<p>Toggles a class on and off, depending on wether it has already been added or not.
+If the element already has the class, it is removed. If the element does not have the class already, it is added to it.</p>
+<h4 id="hasclass">hasClass()</h4>
+<p>Checks if the element has a given class or not. Returns True if class name is found and False otherwise.</p>
+<pre><code>nav = self.appendChild(&quot;&quot;&quot;&lt;ul class='big-red-warning-border-color'&gt;&lt;/ul&gt;&quot;&quot;&quot;)
+if nav.hasClass('big-red-warning-border-color'):
+    print(&quot;Help! There is a big red border around this element! Remove the class so we can feel safe again&quot;)
+</code></pre>
+
 <h3 id="enable-disable">enable(), disable()</h3>
-<p>todo</p>
+<p>These methods will enable or disable an element in the DOM. Useful for forms and similar UI applications.</p>
 <h3 id="hide-show">hide(), show()</h3>
-<p>todo</p>
+<p>Will hide or show and element on demand. This is done by adding the hidden attribute to the element or removing it accordingly.</p>
 <h3 id="event-handling">Event handling</h3>
 <p>todo</p>
 <h2 id="html-parser-reference">HTML parser reference</h2>
