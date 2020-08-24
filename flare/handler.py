@@ -33,8 +33,14 @@ class requestHandler():
 
 
 class ListHandler(requestHandler):
+	def __init__(self, module, action, params={}, eventName="listUpdated", chunks=None):
+		super().__init__(module, action, params=params, eventName=eventName)
+		self.chunks = chunks
+		self.chunkCount = 0
+
 	def reload(self):
 		self.skellist = []
+		self.chunkCount = 0
 		self.requestData()
 
 	def filter(self, filterparams):
@@ -62,4 +68,9 @@ class ListHandler(requestHandler):
 			self.structure = resp["structure"]
 		self.skellist += resp["skellist"]
 
+		if self.chunks and self.chunkCount < self.chunks:
+			self.chunkCount += 1
+			self.requestNext()
+			return
+		self.chunkCount = 0
 		getattr(self, self.eventName).fire(self.skellist)
