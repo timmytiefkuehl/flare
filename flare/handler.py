@@ -35,12 +35,16 @@ class requestHandler():
 class ListHandler(requestHandler):
 	def __init__(self, module, action, params={}, eventName="listUpdated", chunks=None):
 		super().__init__(module, action, params=params, eventName=eventName)
+		self.firstRequest = True
 		self.chunks = chunks
 		self.chunkCount = 0
 
 	def reload(self):
 		self.skellist = []
+		self.firstRequest = True
 		self.chunkCount = 0
+		if "cursor" in self.params:
+			del self.params["cursor"]
 		self.requestData()
 
 	def filter(self, filterparams):
@@ -59,14 +63,20 @@ class ListHandler(requestHandler):
 		resp = NetworkService.decode(req)
 		self.resp = resp
 
+		if "cursor" not in self.params:
+			self.firstRequest = True
+		else:
+			self.firstRequest = False
+
 		if "cursor" in resp:
-			if self.cursor == resp["cursor"]:
+			if not resp["cursor"]:
 				self.complete = True
 			self.cursor = resp["cursor"]
 
 		if not self.structure and "structure" in resp:
 			self.structure = resp["structure"]
-		self.skellist += resp["skellist"]
+		self.skellist = resp["skellist"]
+
 
 		if self.chunks and self.chunkCount < self.chunks:
 			self.chunkCount += 1
