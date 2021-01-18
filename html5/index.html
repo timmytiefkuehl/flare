@@ -68,11 +68,11 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#inheritance-is-normal">Inheritance is normal</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#widget-fundamentals">Widget fundamentals</a>
+    <li class="toctree-l2"><a class="reference internal" href="#widget-basics">Widget basics</a>
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#constructor">Constructor</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#building">Building</a>
+    <li class="toctree-l3"><a class="reference internal" href="#insertion-and-removal">Insertion and removal</a>
         <ul>
     <li class="toctree-l4"><a class="reference internal" href="#appendchild">appendChild()</a>
     </li>
@@ -86,13 +86,15 @@
     </li>
         </ul>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#visibility-and-usability">Visibility and Usability</a>
+    <li class="toctree-l3"><a class="reference internal" href="#visibility-and-usability">Visibility and usability</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#hide-show">hide(), show()</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#enable-disable">enable(), disable()</a>
+    <li class="toctree-l4"><a class="reference internal" href="#enable-disable">enable(), disable()</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#hide-show">hide(), show()</a>
+        </ul>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#class-attribute-modification-styling">class-attribute modification (styling)</a>
+    <li class="toctree-l3"><a class="reference internal" href="#class-attribute-modification">class-attribute modification</a>
         <ul>
     <li class="toctree-l4"><a class="reference internal" href="#addclass">addClass()</a>
     </li>
@@ -104,15 +106,11 @@
     </li>
         </ul>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#event-handling">Event handling</a>
-    </li>
         </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#html-parser-reference">HTML parser reference</a>
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#conditional-rendering">Conditional rendering</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#widget-configuration">Widget configuration</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#html5parsehtml">html5.parseHTML()</a>
     </li>
@@ -161,7 +159,7 @@
 <p>Any <strong>flare</strong> components are entirely established on top of the <em>html5</em>-library.</p>
 <p>The <em>html5</em> library is flare's core module and key feature, and manages access to the browser's DOM and its items, by implementing a Python object wrapper class for any HTML-element. Such an element is called <em>widget</em>. For example, <code>html5.Div()</code> is the widget representing a div-element, or <code>html5.A()</code> a widget representing an a-element. Widgets can be sub-classed into specialized components, which contain other widgets and components and interact together.</p>
 <p>The document's body and head can directly be accessed by the static widgets <code>html5.Head()</code> and <code>html5.Body()</code>.</p>
-<p>All these widgets are inheriting from an abstract widget wrapper class called <code>html5.Widget</code>. <code>html5.Widget</code> is the overall superclass which contains most of the functions used when working with DOM elements. Therefore, all widgets are usually handled the same way, except leaf-type widgets, which may not contain any children.</p>
+<p>All these widgets are inheriting from an abstract widget wrapper called <code>html5.Widget</code>. <code>html5.Widget</code> is the overall superclass which contains most of the functions used when working with DOM elements. Therefore, all widgets are usually handled the same way, except leaf-type widgets, which may not contain any children.</p>
 <h2 id="first-steps">First steps</h2>
 <p>When working with native HTML5 widgets, every widget must be created separately and stacked together in the desired order. This is well known from JavaScript's createElement-function.</p>
 <p>Here's a little code sample.</p>
@@ -187,7 +185,7 @@ html5.Body().appendChild(a)
 <li>To access existing child widgets, use <code>widget.children(n)</code> to access the <em>n</em>-th child, or without <em>n</em> to retrieve a list of a children. </li>
 </ul>
 <h2 id="parsing-widgets-from-html-code">Parsing widgets from HTML-code</h2>
-<p>Above result can also be achieved much faster, by using the build-in HTML5-parser and renderer.</p>
+<p>Above result can also be achieved much faster, by using the build-in <a href="#html-parser-reference">HTML5-parser and renderer</a>.</p>
 <pre><code class="language-python">from flare import *
 
 html5.Body().appendChild(
@@ -201,7 +199,7 @@ ul.appendChild(&quot;&lt;li class='is-active'&gt;lol&lt;/li&gt;&quot;)
 ul.prependChild(html5.Li(1337 * 42))
 ul.appendChild(&quot;&lt;li&gt;me too&lt;/li&gt;&quot;, html5.Li(&quot;and same as I&quot;))
 </code></pre>
-<p>The HTML parser can also do more: When component classes (any class that inherits directly from html5.Widget, like html5.Div or so) are decorated with the <a href="#html5.tag">html5.tag</a>-decorator, these are automatically made available in the HTML-parser for recognition.</p>
+<p>The HTML parser can also do more: When component classes (any class that inherits directly from html5.Widget, like html5.Div or so) are decorated with the <a href="#html5tag">html5.tag</a>-decorator, these are automatically made available in the HTML-parser for recognition.</p>
 <h2 id="inheritance-is-normal">Inheritance is normal</h2>
 <p>In most cases, both methods shown above are used together where necessary and useful. Especially when creating new components with a custom behavior inside your app, knowledge of both worlds is required.</p>
 <p>To create new components, inheriting from existing widgets is usual. If we would like to add our link multiple times within our app, with additional click tracking, we can make it a separate component, like so:</p>
@@ -235,7 +233,7 @@ html5.Body().appendChild(
 )
 </code></pre>
 <p>In this example, we just made our first custom component: The <code>Link</code>-class can be arbitrarily used.</p>
-<h2 id="widget-fundamentals">Widget fundamentals</h2>
+<h2 id="widget-basics">Widget basics</h2>
 <p>Following sections describe the most widely used functions of the <code>html5.Widget</code>-class which are inherited by any widget or huger component in flare.</p>
 <h3 id="constructor">Constructor</h3>
 <p>All widgets share the same <code>__init__</code>-function, having the following signature:</p>
@@ -247,7 +245,7 @@ html5.Body().appendChild(
 <li><code>style</code> allows to specify CSS-classes which are added to the constructed widget using</li>
 <li><code>**kwargs</code> specifies any other parameters that are passed to <code>appendChild()</code>, like variables.  </li>
 </ul>
-<h3 id="building">Building</h3>
+<h3 id="insertion-and-removal">Insertion and removal</h3>
 <p>These methods manipulate the DOM and it's nodes</p>
 <h4 id="appendchild">appendChild()</h4>
 <p>Appends another html5.Widget as child to the parent element:</p>
@@ -272,16 +270,16 @@ navpoint2 = self.nav.insertBefore(&quot;&quot;&quot;&lt;li&gt;Navigation Point 2
 <p>If the child element that the new element is supposed to be inserted before does not exist, the new element is appended to the parent instead.</p>
 <h4 id="removechild-removeallchildren">removeChild(), removeAllChildren()</h4>
 <p>Either reemoves one child from the parent element or all available children.</p>
-<h3 id="visibility-and-usability">Visibility and Usability</h3>
+<h3 id="visibility-and-usability">Visibility and usability</h3>
 <p>Widgets can be switched hidden or disabled. Form elements, for example, might be disabled when a specific condition isn't met. These functions here help to quickly change visibility and usability of widgets, including their child widgets.</p>
-<h3 id="enable-disable">enable(), disable()</h3>
-<p>Enable or disable the widget in the DOM. Useful for forms and similar UI applications.</p>
-<p>To check whether a widget is disabled or not, evaluate <code>widget["disabled"]</code>. In the HTML-parser, this flag can be set using the <code>disabled</code> attribute, e.g. <code>&lt;div disabled&gt;I'm disabled&lt;/div&gt;</code>.</p>
-<h3 id="hide-show">hide(), show()</h3>
+<h4 id="hide-show">hide(), show()</h4>
 <p>Hides or shows a widget on demand.</p>
 <p>To check whether a widget is hidden or not, evaluate <code>widget["hidden"]</code>. In the HTML-parser, this flag can be set using the <code>hidden</code> attribute, e.g. <code>&lt;div hidden&gt;You can't see me.&lt;/div&gt;</code>.</p>
-<h3 id="class-attribute-modification-styling">class-attribute modification (styling)</h3>
-<p>These methods are helpful for adding classes dynamically.</p>
+<h4 id="enable-disable">enable(), disable()</h4>
+<p>Enable or disable the widget in the DOM. Useful for forms and similar UI applications.</p>
+<p>To check whether a widget is disabled or not, evaluate <code>widget["disabled"]</code>. In the HTML-parser, this flag can be set using the <code>disabled</code> attribute, e.g. <code>&lt;div disabled&gt;I'm disabled&lt;/div&gt;</code>.</p>
+<h3 id="class-attribute-modification">class-attribute modification</h3>
+<p>These methods are helpful for adding CSS-classes quickly.</p>
 <h4 id="addclass">addClass()</h4>
 <p>Adds a class to the html5.Widget and checks to prevent adding the same class multiple times.</p>
 <pre><code>nav = self.appendChild(&quot;&quot;&quot;&lt;ul&gt;&lt;/ul&gt;&quot;&quot;&quot;)
@@ -289,7 +287,7 @@ nav.addClass('navlist')
 </code></pre>
 <p>Adding a class multiple times might be wanted and is valid. In this case, modify the widget's <code>class</code>-attribute directly by assigning a list to it.</p>
 <h4 id="removeclass">removeClass()</h4>
-<p>Checks if the object has that class and removes it</p>
+<p>Checks if the widget has that class and removes it</p>
 <pre><code>nav = self.appendChild(&quot;&quot;&quot;&lt;ul class='big-red-warning-border-color'&gt;&lt;/ul&gt;&quot;&quot;&quot;)
 nav.removeClass('big-red-warning-border-color')
 </code></pre>
@@ -301,8 +299,6 @@ nav.removeClass('big-red-warning-border-color')
 if nav.hasClass('big-red-warning-border-color'):
     print(&quot;Help! There is a big red border around this element! Remove the class so we can feel safe again&quot;)
 </code></pre>
-<h3 id="event-handling">Event handling</h3>
-<p>todo</p>
 <h2 id="html-parser-reference">HTML parser reference</h2>
 <h3 id="conditional-rendering">Conditional rendering</h3>
 <p>The attributes <code>flare-if</code>, <code>flare-elif</code> and <code>flare-else</code> can be used on all tags for conditional rendering.
@@ -317,13 +313,22 @@ This allows for any simple Python expression that evaluates to True or any compu
 &quot;&quot;&quot;, i=50, j=151)
 </code></pre>
 <p>As variables, any <em>kwargs</em>-arguments given to html5.fromHTML() (or related functions) can be involved inside the evaluation.</p>
-<h3 id="widget-configuration">Widget configuration</h3>
-<p>todo</p>
 <h3 id="html5parsehtml">html5.parseHTML()</h3>
-<p>Parses the provided HTML-code according to the tags registered by html5.registerTag() or components that use the html5.tag-decorator.</p>
-<p>The function returns an abstract syntax tree representation (HtmlAst) of the HTML-code that can be rendered by <code>html5.fromHTML()</code>.</p>
+<pre><code class="language-python">def parseHTML(html: str, debug: bool=False) -&gt; HtmlAst
+</code></pre>
+<p>Parses the provided HTML-code according to the tags registered by html5.registerTag() or components that use the <a href="#html5tag">html5.tag</a>-decorator.</p>
+<p>The function returns an abstract syntax tree representation (HtmlAst) of the HTML-code that can be rendered by <a href="#html5fromhtml">html5.fromHTML()</a>.</p>
 <h3 id="html5fromhtml">html5.fromHTML()</h3>
+<pre><code class="language-python">def fromHTML(html: [str, HtmlAst], appendTo: Widget=None, bindTo: Widget=None, debug: bool=False, **kwargs) -&gt; [Widget]
+</code></pre>
 <p>Renders HTML-code or compiled HTML-code (HtmlAst).</p>
+<ul>
+<li>appendTo: Defines the Widget where to append the generated widgets to</li>
+<li>bindTo: Defines the Widget where to bind widgets using the <code>[name]</code>-attribute to</li>
+<li>debug: Debugging output</li>
+<li>**kwargs: Any specified kwargs can be used as variables, either for <code>{{replacement}}</code> in attributes or texts or as variables used for <a href="#conditional-rendering">conditional rendering</a>.</li>
+</ul>
+<p>HTML-code can optionally be pre-compiled with <a href="#html5parsehtml">html5.parseHTML()</a>, and then executed multiple times (but with differend variables) by fromHTML. This is useful when generating lists of same elements with only replaced variable data.</p>
 <h3 id="html5tag">@html5.tag</h3>
 <p>Decorator to register a sub-class of <code>html5.Widget</code> either under its class-name, or an associated tag-name.</p>
 <p>Examples:</p>
