@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>html5 - flare</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../css/theme.css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "html5";
+    var mkdocs_page_input_path = "presentation.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> flare</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../setup/">Setup</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../config/">Configuration</a>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../html5/">html5</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">flare</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>html5</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="html5">html5</h1>
+<p>A DOM-abstraction layer and API that is used to create client-side Web-Apps running in the browser and written in Python.</p>
+<h2 id="overview">Overview</h2>
+<p><strong>html5</strong> is used together with <a href="https://github.com/iodide-project/pyodide">Pyodide</a> to implement client-side web-apps with user-interfaces running in any modern browser and written in pure Python.</p>
+<p>Its highlights are</p>
+<ul>
+<li>stand-alone with zero dependencies</li>
+<li>Python class abstraction for any DOM-element, like <code>html5.Div()</code></li>
+<li>a built-in HTML parser and executor to generate DOM objects from HTML-code</li>
+<li>helpers for event-handling, adding/removing CSS-classes, re-arrange elements</li>
+<li>Pre-defined dialogs and ViUR ignite integration</li>
+<li>Optimized to work with <a href="https://github.com/iodide-project/pyodide">Pyodide</a> ... but also works with minor changes in other environments (formerly in PyJS, tests had been done with Transcrypt)</li>
+</ul>
+<h2 id="basics">Basics</h2>
+<ul>
+<li>Every <code>html5.Widget</code> corresponds to a DOM-element</li>
+<li><code>html5.Widget()</code> is super-class for all elements</li>
+<li>HTML-Elements are simply called e.g. <code>html5.Div()</code>, <code>html5.Li()</code>, <code>html5.Input()</code>*</li>
+<li>Attributes accessable via index <code>widget["attribute"]</code></li>
+<li>Helper functions like <code>Widget.hide()</code>, <code>Widget.disable()</code>, <code>Widget.addClass()</code></li>
+</ul>
+<p>(*) Always only uppercase first letter, rest is lowercase, therefore <code>html5.Textarea()</code></p>
+<hr />
+<h2 id="inheritance-is-normal">Inheritance is normal</h2>
+<ul>
+<li>Inherit from basic widgets to implement custom behavior</li>
+</ul>
+<pre><code class="language-python">class HelloWorldSayer(html5.Div):
+    def __init__():
+        super().__init__(&quot;&lt;h1&gt;Hello World&lt;/h1&gt;&quot;)
+        self.addClass(&quot;i-am-special&quot;)
+        self.sinkEvent(&quot;onMouseOver&quot;)
+        self.disable()
+
+    def onMouseOver(self, event):
+        logging.info(&quot;You're over me!&quot;)
+
+html5.Body().appendChild(HelloWorldSayer())
+</code></pre>
+<hr />
+<h2 id="widgetappendchild">Widget.appendChild()</h2>
+<ul>
+<li>Used to stack elements</li>
+<li>Accepts other widgets, HTML-Code, compiled HTML-code, atomic values</li>
+<li><code>Widget.prependChild()</code> and <code>Widget.insertChild()</code> operate analogously</li>
+</ul>
+<p>--</p>
+<pre><code class="language-python">ul = html5.Ul()
+ul.appendChild(&quot;&lt;li&gt;lol&lt;/li&gt;&quot;)
+ul.prependChild(html5.Li(1337 * 42))
+ul.appendChild(&quot;&lt;li&gt;me too&lt;/li&gt;&quot;, html5.Li(&quot;same as I&quot;))
+</code></pre>
+<hr />
+<h2 id="events">Events</h2>
+<ul>
+<li><code>Widget.sinkEvent()</code> sinks events to be recognized</li>
+<li><code>html5.utils.doesEventHitWidgetOrChildren()</code></li>
+<li>Use <code>event.stopPropagate()</code> and <code>event.preventDefault()</code> to delegate event bubbling</li>
+</ul>
+<p>--</p>
+<pre><code class="language-python">def Clicker(html5.Div):
+    def __init__():
+        super().__init__(&quot;Hit me!&quot;)
+        self.sinkEvent(&quot;onClick&quot;)
+
+    def onClick(self, event):
+        html5.ext.Alert(&quot;You clicked me!&quot;)
+</code></pre>
+<hr />
+<h2 id="html-parser-interpreter">HTML parser &amp; interpreter</h2>
+<ul>
+<li><code>html5.fromHTML()</code> calls generic HTML parser (returns widget list)</li>
+<li><code>Widget.fromHTML()</code> calls Widget-bound HTML parser (returns widget list)</li>
+<li>
+<h2 id="html5parsehtml-parses-html-for-faster-interpretation-returns-htmlast"><code>html5.parseHTML()</code> parses HTML for faster interpretation (returns HtmlAst)</h2>
+</li>
+</ul>
+<pre><code class="language-python">html5.Body.fromHTML(&quot;&quot;&quot;&lt;input [name]=&quot;input&quot; class=&quot;ignt-input&quot;&gt;&quot;&quot;&quot;)
+</code></pre>
+<ul>
+<li><code>[name]</code> binds associated name to binder, e.g. <code>html5.Body().input</code></li>
+<li>Use <code>appendTo</code>- and <code>bindTo</code>-arguments to change or disable appending and binding target</li>
+<li>
+<h2 id="use-kwargs-arguments-to-pass-in-variable-value-replaced-in-attributes-and-plain-text">Use <code>**kwargs</code>-arguments to pass in variable value replaced in attributes and plain text</h2>
+</li>
+</ul>
+<pre><code class="language-python"># Let's bind something added to the body to our own widget...
+html5.Body.fromHTML(&quot;&quot;&quot;&lt;input [name]=&quot;input&quot; class=&quot;ignt-input&quot;&gt;&quot;&quot;&quot;, bindTo=self)
+# Let replace some text
+self.appendChild(&quot;&lt;h2&gt;{{text}}&lt;/h2&gt;&quot;, text=&quot;Hello World&quot;)
+</code></pre>
+<p>--</p>
+<ul>
+<li>Widget constructor allows for direct parameters passed to <code>Widget.fromHTML()</code></li>
+</ul>
+<hr />
+              
+            </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

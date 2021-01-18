@@ -110,6 +110,8 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#html-parser-reference">HTML parser reference</a>
         <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#conditional-rendering">Conditional rendering</a>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#widget-configuration">Widget configuration</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#html5parsehtml">html5.parseHTML()</a>
@@ -156,14 +158,14 @@
             <div class="section">
               
                 <h1 id="html5">html5</h1>
-<p><strong>flare</strong> is entirely established on top of a library called <em>html5</em>.</p>
-<p>This library manages access to the browser's DOM and its items, by implementing a Python object wrapper class for every HTML5-element. This is called a <em>widget</em>. For example <code>html5.Div()</code> is the widget representing a div-element, or <code>html5.A()</code> a widget representing an a-element.</p>
-<p>The document's body and head can directly be accessed by the static widgets <code>html5.Head()</code> and <code>html5.Body()</code>.
-All these widgets are inheriting from an abstract widget wrapper class called <code>html5.Widget</code>. <code>html5.Widget</code> is the overall superclass which contains most of the functions used when working with DOM elements. Therefore, all widgets are usually handled the same way.</p>
+<p>Any <strong>flare</strong> components are entirely established on top of the <em>html5</em>-library.</p>
+<p>The <em>html5</em> library is flare's core module and key feature, and manages access to the browser's DOM and its items, by implementing a Python object wrapper class for any HTML5 element. Such an element is called <em>widget</em>. For example, <code>html5.Div()</code> is the widget representing a div-element, or <code>html5.A()</code> a widget representing an a-element. Widgets can be sub-classed into specialized components, which contain other widgets and components and interact together.</p>
+<p>The document's body and head can directly be accessed by the static widgets <code>html5.Head()</code> and <code>html5.Body()</code>.</p>
+<p>All these widgets are inheriting from an abstract widget wrapper class called <code>html5.Widget</code>. <code>html5.Widget</code> is the overall superclass which contains most of the functions used when working with DOM elements. Therefore, all widgets are usually handled the same way, except leaf-type widgets, which may not contain any children.</p>
 <h2 id="first-steps">First steps</h2>
-<p>When working with native HTML5 widgets, every widget must be created separately and stacked together in the desired order. This practise is well known from JavaScript's createElement-function.</p>
+<p>When working with native HTML5 widgets, every widget must be created separately and stacked together in the desired order. This is well known from JavaScript's createElement-function.</p>
 <p>Here's a little code sample.</p>
-<pre><code class="python">from flare import *
+<pre><code class="language-python">from flare import html5
 
 # Creating a new a-widget
 a = html5.A()
@@ -177,37 +179,36 @@ a.appendChild(html5.TextNode(&quot;Hello World&quot;))
 # Append the a-widget to the body-widget
 html5.Body().appendChild(a)
 </code></pre>
-
 <p>Summarized:</p>
 <ul>
-<li><code>html5.Xyz()</code> creates an instance of the desired widget (the notation is that the first letter is always uppercase, rest is hold lowercase, therefore <code>html5.Textarea()</code> for a textarea is used)</li>
-<li>Attributes are accessable via attribute indexing, like <code>widget["attribute"]</code>. There are some special attributes like <code>style</code> or <code>data</code> that are providing a dict-like access, so <code>widget["style"]["border"] = "1px solid red"</code> is used.</li>
+<li><code>html5.Xyz()</code> creates an instance of the desired widget (the notation is that the first letter is always in uppercase-order, the rest is hold in lowercase-order, therefore e.g. <code>html5.Textarea()</code> is used for a textarea)</li>
+<li>Attributes are accessible via the attribute indexing syntax, like <code>widget["attribute"]</code>. There are some special attributes like <code>style</code> or <code>data</code> that are providing a dict-like access, so <code>widget["style"]["border"] = "1px solid red"</code> is used.</li>
 <li>Stacking is performed with <code>widget.appendChild()</code>. There's also <code>widget.prependChild()</code>, <code>widget.insertBefore()</code> and <code>widget.removeChild()</code> for further insertion or removal operations.</li>
+<li>To access existing child widgets, use <code>widget.children(n)</code> to access the <em>n</em>-th child, or without <em>n</em> to retrieve a list of a children. </li>
 </ul>
 <h2 id="parsing-widgets-from-html-code">Parsing widgets from HTML-code</h2>
-<p>Above result can also be achieved much faster, when the build-in HTML5 parser is used. </p>
-<pre><code class="python">from flare import *
+<p>Above result can also be achieved much faster, by using the build-in HTML5-parser and renderer.</p>
+<pre><code class="language-python">from flare import *
 
 html5.Body().appendChild(
     &quot;&lt;a href='https://www.viur.dev' target='_blank' class='viur'&gt;Hello World&lt;/a&gt;&quot;
 )
 </code></pre>
-
-<p>Much simpler, right? This is a very handy feature for prototyping and to quickly integrate new HTML layouts.
-<code>Widget.appendChild()</code> and other, corresponding functions, allow for an arbitrary number of elements to be added. HTML-code, more widgets, text or even lists or tuples can be given to these functions, like so</p>
-<pre><code class="python">ul = html5.Ul()
-ul.appendChild(&quot;&lt;li&gt;lol&lt;/li&gt;&quot;)
+<p>That's quite simpler, right? This is a very handy feature for prototyping and to quickly integrate new HTML layouts.</p>
+<p><code>Widget.appendChild()</code> and other, corresponding functions, allow for an arbitrary number of elements to be added. HTML-code, widgets, text or even lists or tuples of those can be given, like so</p>
+<pre><code class="language-python">ul = html5.Ul()
+ul.appendChild(&quot;&lt;li class='is-active'&gt;lol&lt;/li&gt;&quot;)
 ul.prependChild(html5.Li(1337 * 42))
 ul.appendChild(&quot;&lt;li&gt;me too&lt;/li&gt;&quot;, html5.Li(&quot;and same as I&quot;))
 </code></pre>
-
+<p>The HTML parser can also do more: When component classes (any class that inherits directly from an html5.Widget, like <code>html5.Div</code> or so) are decorated with the <a href="#html5.tag">html5.tag</a>-decorator, these are automatically made available in the HTML-parser for recognition.</p>
 <h2 id="inheritance-is-normal">Inheritance is normal</h2>
-<p>In most cases, both methods shown above are used together where necessary and useful. Especially when creating new Widgets with a custom behavior inside your app, knowledge of both worlds is required.</p>
-<p>To create new components, inheriting from existing widgets is usual. If we would like to add our link multiple times within our app, with additional click tracking, we can make it a separate widget, like so:</p>
-<pre><code class="python">import logging
+<p>In most cases, both methods shown above are used together where necessary and useful. Especially when creating new components with a custom behavior inside your app, knowledge of both worlds is required.</p>
+<p>To create new components, inheriting from existing widgets is usual. If we would like to add our link multiple times within our app, with additional click tracking, we can make it a separate component, like so:</p>
+<pre><code class="language-python">import logging
 from flare import *
 
-class Link(html5.A):
+class Link(html5.A):  # inherit Link from html5.A widget
     def __init__(self, url, *args, target=&quot;_blank&quot;, **kwargs):
         super().__init__()
         self.addClass(&quot;link&quot;)
@@ -233,15 +234,13 @@ html5.Body().appendChild(
     &quot;&quot;&quot;)
 )
 </code></pre>
-
 <p>In this example, we just made our first custom component: The <code>Link</code>-class can be arbitrarily used.</p>
 <h2 id="widget-fundamentals">Widget fundamentals</h2>
 <p>Following sections describe the most widely used functions of the <code>html5.Widget</code>-class which are inherited by any widget or huger component in flare.</p>
 <h3 id="constructor">Constructor</h3>
 <p>All Widgets in html5 share the same <code>__init__</code>-function, having the following signature:</p>
-<pre><code class="python">def Widget.__init__(self, *args, appendTo=None, style=None, **kwargs)
+<pre><code class="language-python">def Widget.__init__(self, *args, appendTo=None, style=None, **kwargs)
 </code></pre>
-
 <ul>
 <li><code>*args</code> are any positional arguments that are passed to <code>self.appendChild()</code>. These can be either other widgets or strings containing HTML-code. Non-container widgets like <code>html5.Br()</code> or <code>html5.Hr()</code> don't allow anything passed to this parameter, and throw an Exception.</li>
 <li><code>appendTo</code> can be set to another html5.Widget where the constructed widget automatically will be appended to. It substitutes an additional <code>appendChild()</code>-call to insert the constructed Widget to the parent.</li>
@@ -255,7 +254,6 @@ html5.Body().appendChild(
 <pre><code>self.appendChild(&quot;&quot;&quot;&lt;ul class='navlist'&gt;&lt;/ul&gt;&quot;&quot;&quot;)
 self.nav.appendChild(&quot;&quot;&quot;&lt;li&gt;Navigation Point 1&lt;/li&gt;&quot;&quot;&quot;)
 </code></pre>
-
 <p>If replace=True is passed as an argument next to the html code, this method will discard all children of the parent element
 and replace them.</p>
 <h4 id="prependchild">prependChild()</h4>
@@ -264,7 +262,6 @@ and replace them.</p>
 navpoint2 = self.nav.appendChild(&quot;&quot;&quot;&lt;li&gt;Navigation Point 2&lt;/li&gt;&quot;&quot;&quot;)
 navpoint2.prependChild((&quot;&quot;&quot;&lt;li&gt;Navigation Point 1&lt;/li&gt;&quot;&quot;&quot;))
 </code></pre>
-
 <p>If replace=True is passed as an argument next to the html code, this method will discard all children of the parent element
 and replace them.</p>
 <h4 id="insertbefore">insertBefore()</h4>
@@ -274,7 +271,6 @@ navpoint = self.nav.appendChild(&quot;&quot;&quot;&lt;li&gt;Navigation Point 1&l
 navpoint3 = self.nav.appendChild((&quot;&quot;&quot;&lt;li&gt;Navigation Point 3&lt;/li&gt;&quot;&quot;&quot;))
 navpoint2 = self.nav.insertBefore((&quot;&quot;&quot;&lt;li&gt;Navigation Point 2&lt;/li&gt;&quot;&quot;&quot;), navpoint3)
 </code></pre>
-
 <p>If the child element that the new element is supposed to be inserted before does not exist, the new element is appended to the parent instead.</p>
 <h4 id="fromhtml">fromHTML()</h4>
 <p>Instantiates a widget from an html string that we can access in our python code.</p>
@@ -285,19 +281,17 @@ navpoint2 = self.nav.insertBefore((&quot;&quot;&quot;&lt;li&gt;Navigation Point 
 <h3 id="addclass-removeclass-toggleclass-hasclass">addClass(), removeClass(), toggleClass(), hasClass()</h3>
 <p>These methods are helpful for adding classes dynamically.</p>
 <h4 id="addclass">addClass()</h4>
-<p>Adds a class to the html5 element and checks to prevent adding the same class.</p>
+<p>Adds a class to the html5.Widget and checks to prevent adding the same class.</p>
 <pre><code>nav = self.appendChild(&quot;&quot;&quot;&lt;ul&gt;&lt;/ul&gt;&quot;&quot;&quot;)
 nav.addClass('navlist')
 </code></pre>
-
 <h4 id="removeclass">removeClass()</h4>
 <p>Checks if the object has that class and removes it</p>
 <pre><code>nav = self.appendChild(&quot;&quot;&quot;&lt;ul class='big-red-warning-border-color'&gt;&lt;/ul&gt;&quot;&quot;&quot;)
 nav.removeClass('big-red-warning-border-color')
 </code></pre>
-
 <h4 id="toggleclass">toggleClass()</h4>
-<p>Toggles a class on and off, depending on wether it has already been added or not.
+<p>Toggles a class on and off, depending on whether it has already been added or not.
 If the element already has the class, it is removed. If the element does not have the class already, it is added to it.</p>
 <h4 id="hasclass">hasClass()</h4>
 <p>Checks if the element has a given class or not. Returns True if class name is found and False otherwise.</p>
@@ -305,7 +299,6 @@ If the element already has the class, it is removed. If the element does not hav
 if nav.hasClass('big-red-warning-border-color'):
     print(&quot;Help! There is a big red border around this element! Remove the class so we can feel safe again&quot;)
 </code></pre>
-
 <h3 id="enable-disable">enable(), disable()</h3>
 <p>These methods will enable or disable an element in the DOM. Useful for forms and similar UI applications.</p>
 <h3 id="hide-show">hide(), show()</h3>
@@ -313,15 +306,40 @@ if nav.hasClass('big-red-warning-border-color'):
 <h3 id="event-handling">Event handling</h3>
 <p>todo</p>
 <h2 id="html-parser-reference">HTML parser reference</h2>
-<p>todo</p>
+<h3 id="conditional-rendering">Conditional rendering</h3>
+<p>For conditional rendering, the attributes <code>flare-if</code>, <code>flare-elif</code> and <code>flare-else</code> can be used on all tags for conditional rendering. This allows for any simple Python expression that evaluates to True.</p>
+<pre><code class="language-python">html5.Body().appendChild(&quot;&quot;&quot;
+    &lt;div&gt;begin&lt;/div&gt;
+    &lt;div flare-if=&quot;i &lt;= 10&quot;&gt;i is just low&lt;/div&gt;
+    &lt;div flare-elif=&quot;i &lt;= 50 and j &gt;=100&quot;&gt;i and j have normal values&lt;/div&gt;
+    &lt;div flare-elif=&quot;i &gt; 50 and j &gt;= 50&quot;&gt;i and j have moderate values&lt;/div&gt;
+    &lt;div flare-else&gt;i and j are something different&lt;/div&gt;
+    &lt;div&gt;end&lt;/div&gt;
+&quot;&quot;&quot;, i=50, j=151)
+</code></pre>
+<p>As variables, any <code>kwargs</code>-arguments given to <code>html5.fromHTML()</code> (or related functions) can be involved inside the evaluation.</p>
 <h3 id="widget-configuration">Widget configuration</h3>
 <p>todo</p>
 <h3 id="html5parsehtml">html5.parseHTML()</h3>
-<p>todo</p>
+<p>Parses the provided HTML-code according to the tags registered by html5.registerTag() or components that use the html5.tag-decorator.</p>
+<p>The function returns an abstract syntax tree representation (HtmlAst) of the HTML-code that can be rendered by <code>html5.fromHTML()</code>.</p>
 <h3 id="html5fromhtml">html5.fromHTML()</h3>
-<p>todo</p>
+<p>Renders HTML-code or compiled HTML-code (HtmlAst).</p>
 <h3 id="html5tag">@html5.tag</h3>
-<p>todo</p>
+<p>Decorator to register a sub-class of <code>html5.Widget</code> either under its class-name or an associated tag-name.</p>
+<p>Examples:</p>
+<pre><code class="language-python">from flare import html5
+
+# register class Foo as &lt;foo&gt;-Tag
+@html5.tag
+class Foo(html5.Div):
+    pass
+
+# register class Bar as &lt;baz&gt;-Tag
+@html5.tag(&quot;baz&quot;)
+class Bar(html5.Div):
+    pass
+</code></pre>
               
             </div>
           </div>

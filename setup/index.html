@@ -105,14 +105,14 @@
 <p>Setting up a new Python web-app with <em>flare</em> is fairly easy. This section describes several things and ways how <em>flare</em> can be used and configured.</p>
 <h2 id="html-skeleton">HTML skeleton</h2>
 <p>Below is a shortened version of the code from <em>hello.html</em> delivered together with the <em>flare</em> repo. Such a skeleton must be individually created for an app written with <em>flare</em>.</p>
-<pre><code class="html">&lt;!doctype html&gt;
+<pre><code class="language-html">&lt;!doctype html&gt;
 &lt;html&gt;
 &lt;head&gt;
     &lt;meta charset=&quot;UTF-8&quot;&gt;
     &lt;link rel=&quot;stylesheet&quot; href=&quot;assets/css/style.min.css&quot;/&gt;
 
     &lt;!-- (1) --&gt;
-    &lt;script src=&quot;https://pyodide-cdn2.iodide.io/v0.15.0/full/pyodide.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://pyodide-cdn2.iodide.io/v0.16.1/full/pyodide.js&quot;&gt;&lt;/script&gt;
     &lt;!-- &lt;script src=&quot;pyodide/pyodide.js&quot;&gt;&lt;/script&gt; --&gt;
 
     &lt;!-- (2) --&gt;
@@ -147,7 +147,6 @@ flare.popup.Alert(&quot;Hello World&quot;)
 &lt;/body&gt;
 &lt;/html&gt;
 </code></pre>
-
 <p>Notable are the following sections:</p>
 <ol>
 <li>This is the include for the used Pyodide version. When quickly setting up a project, the default CDN version of Pyodide can be used and is loaded from here. Indeed, it is also possible to serve Pyodide on your own. For this, the utility script <code>bin/get-pyodide.py</code> can be used. This script downloads a minimal version of Pyodide delivered from the CDN and stores it into a folder named <code>pyodide/</code>. In such a case, the CDN-include here must be removed, and replaced by the local include. <code>get-pyodide.py</code> patches some Pyodide-files to directly run from the URL <code>/pyodide</code>. You can override this setting by specifying a variable <code>window.languagePluginLoader</code> before including the <code>pyodide.js</code>.</li>
@@ -169,11 +168,11 @@ _ <code>/myapp</code> contains our app, which exists only of the files</li>
 </ul>
 <p>We only describe the files in <code>/myapp</code>:</p>
 <p><strong>index.html</strong></p>
-<pre><code class="html">&lt;!doctype html&gt;
+<pre><code class="language-html">&lt;!doctype html&gt;
 &lt;html&gt;
 &lt;head&gt;
     &lt;meta charset=&quot;UTF-8&quot;&gt;
-    &lt;script src=&quot;https://pyodide-cdn2.iodide.io/v0.15.0/full/pyodide.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://pyodide-cdn2.iodide.io/v0.16.1/full/pyodide.js&quot;&gt;&lt;/script&gt;
     &lt;script src=&quot;/flare/assets/js/init.js&quot;&gt;&lt;/script&gt;
     &lt;script&gt;
         window.addEventListener(
@@ -198,21 +197,18 @@ _ <code>/myapp</code> contains our app, which exists only of the files</li>
 &lt;/body&gt;
 &lt;/html&gt;
 </code></pre>
-
 <p><strong><strong>init</strong>.py</strong>:</p>
-<pre><code class="python">from flare import *
+<pre><code class="language-python">from flare import *
 
 if __name__ == &quot;myapp&quot;:
     html5.Body().appendChild('&lt;a href=&quot;https://www.viur.dev&quot;&gt;Hello World&lt;/a&gt;')
     popup.Alert(&quot;Hello World&quot;)
 </code></pre>
-
 <p><strong>files.json</strong>:</p>
-<pre><code class="json">[
+<pre><code class="language-json">[
   &quot;__init__.py&quot;
 ]
 </code></pre>
-
 <p>The <code>files.json</code> was simply generated using the by <code>../flare/bin/gen-files-json.py</code>. Whenever a Python file is added, this must be done once. The <code>files.json</code> should also be added to version control, to make the app run out-of-the-box.</p>
               
             </div>

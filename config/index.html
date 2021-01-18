@@ -115,7 +115,7 @@
 <p>Depending on the location where you want to serve your app, some more configuration might be necessary regarding the WASM mimetype.</p>
 <h3 id="google-app-engine">Google App Engine</h3>
 <p>To serve your own Pyodide via Google App Engine, add the following lines to your <code>app.yaml</code> file and modify them when needed, as Google App Engine doesn't recognize WASM files correctly.</p>
-<pre><code class="yaml">handlers:
+<pre><code class="language-yaml">handlers:
 - url: /pyodide/(.*\.wasm)$
   static_files: pyodide/\1
   upload: pyodide/.*\.wasm$
@@ -123,7 +123,6 @@
 - url: /pyodide
   static_dir: pyodide
 </code></pre>
-
 <h3 id="apache-webserver">Apache Webserver</h3>
 <p>For apache web-server, this <code>.htaccess</code> configuration helped to serve the app correctly.</p>
 <pre><code>RewriteEngine off
