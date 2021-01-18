@@ -110,7 +110,13 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#html-parser-reference">HTML parser reference</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#conditional-rendering">Conditional rendering</a>
+    <li class="toctree-l3"><a class="reference internal" href="#data-based-rendering">Data-based rendering</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#using-variables">Using variables</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#flare-if-flare-elif-flare-else">flare-if, flare-elif, flare-else</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#html5parsehtml">html5.parseHTML()</a>
     </li>
@@ -300,9 +306,19 @@ if nav.hasClass('big-red-warning-border-color'):
     print(&quot;Help! There is a big red border around this element! Remove the class so we can feel safe again&quot;)
 </code></pre>
 <h2 id="html-parser-reference">HTML parser reference</h2>
-<h3 id="conditional-rendering">Conditional rendering</h3>
-<p>The attributes <code>flare-if</code>, <code>flare-elif</code> and <code>flare-else</code> can be used on all tags for conditional rendering.
-This allows for any simple Python expression that evaluates to True or any computed non-boolean value representing True.</p>
+<h3 id="data-based-rendering">Data-based rendering</h3>
+<h4 id="using-variables">Using variables</h4>
+<p>Any variables provided via kwargs to <a href="#html5fromhtml">html5.fromHTML()</a> can be inserted in attributes or as TextNode-elements with their particular content when surrounded by <code>{{</code> and <code>}}</code>. Inside this notation, full Python expression syntax is allowed, so that even calculations or concatenations can be done.</p>
+<pre><code class="language-python">html5.Body().appendChild(&quot;&quot;&quot;
+    &lt;div class=&quot;color-{{ l[1] + 40 }}&quot;&gt;{{ d[ &quot;world&quot; ] + &quot;World&quot; * 3 }} and {{ d }}&lt;/div&gt;
+&quot;&quot;&quot;, l=[1,2,3], d={&quot;world&quot;: &quot;Hello&quot;})
+</code></pre>
+<p>renders into </p>
+<pre><code class="language-html">&lt;div class=&quot;color-42&quot;&gt;HelloWorldWorldWorld and {'world': 'Hello'}&lt;/div&gt;
+</code></pre>
+<h4 id="flare-if-flare-elif-flare-else">flare-if, flare-elif, flare-else</h4>
+<p>The attributes <code>flare-if</code>, <code>flare-elif</code> and <code>flare-else</code> can be used on all tags for conditional rendering.</p>
+<p>This allows for any simple Python expression that evaluates to True or any computed non-boolean value representing True.</p>
 <pre><code class="language-python">html5.Body().appendChild(&quot;&quot;&quot;
     &lt;div&gt;begin&lt;/div&gt;
     &lt;div flare-if=&quot;i &lt;= 10&quot;&gt;i is just low&lt;/div&gt;
@@ -312,7 +328,7 @@ This allows for any simple Python expression that evaluates to True or any compu
     &lt;div&gt;end&lt;/div&gt;
 &quot;&quot;&quot;, i=50, j=151)
 </code></pre>
-<p>As variables, any <em>kwargs</em>-arguments given to html5.fromHTML() (or related functions) can be involved inside the evaluation.</p>
+<p>As variables, any arguments given to <a href="#html5fromhtml">html5.fromHTML()</a> (or related functions) as kwargs can be used.</p>
 <h3 id="html5parsehtml">html5.parseHTML()</h3>
 <pre><code class="language-python">def parseHTML(html: str, debug: bool=False) -&gt; HtmlAst
 </code></pre>
@@ -326,9 +342,9 @@ This allows for any simple Python expression that evaluates to True or any compu
 <li>appendTo: Defines the Widget where to append the generated widgets to</li>
 <li>bindTo: Defines the Widget where to bind widgets using the <code>[name]</code>-attribute to</li>
 <li>debug: Debugging output</li>
-<li>**kwargs: Any specified kwargs can be used as variables, either for <code>{{replacement}}</code> in attributes or texts or as variables used for <a href="#conditional-rendering">conditional rendering</a>.</li>
+<li>**kwargs: Any specified kwargs are available as <a href="#using-variables">variables to any expressions</a>.</li>
 </ul>
-<p>HTML-code can optionally be pre-compiled with <a href="#html5parsehtml">html5.parseHTML()</a>, and then executed multiple times (but with differend variables) by fromHTML. This is useful when generating lists of same elements with only replaced variable data.</p>
+<p>HTML-code can optionally be pre-compiled with <a href="#html5parsehtml">html5.parseHTML()</a>, and then executed multiple times (but with different variables) by fromHTML. This is useful when generating lists of same elements with only replaced variable data.</p>
 <h3 id="html5tag">@html5.tag</h3>
 <p>Decorator to register a sub-class of <code>html5.Widget</code> either under its class-name, or an associated tag-name.</p>
 <p>Examples:</p>
